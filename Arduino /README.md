@@ -8,11 +8,7 @@ This section contains the Arduino code responsible for controlling the fan's phy
 
 -   Arduino sketches (`.ino`)
     
--   Motor and actuator control
-    
--   Behavioral state logic
-    
--   Hardware pin configurations
+-   Specific Hardware 
     
 
 ## How It Works
@@ -26,6 +22,8 @@ The Arduino acts as the physical control system of the fan. It receives commands
 -   Compatible Arduino board
     
 -   Required libraries and connected hardware
+
+-   Required/listed Motors
     
 
 ## Getting Started
