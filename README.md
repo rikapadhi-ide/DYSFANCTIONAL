@@ -29,6 +29,9 @@ Rather than attempting to answer these questions definitively, the project uses 
 
 Our project combines physical prototyping, electronics, and interactive programming to create an expressive object.
 
+
+![enter image description here](https://cdn.corenexis.com/f/Gtd29APj.png)
+
 **Hardware**
 
 -   [Arm Joints]
