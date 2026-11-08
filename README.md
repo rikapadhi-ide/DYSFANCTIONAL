@@ -57,6 +57,34 @@ Our project combines physical prototyping, electronics, and interactive programm
 
 See the technical documentation for further details.
 
+## Repository Guide
+
+This repository contains the code, technical & physical documentation, and supporting files used to develop the project.
+
+ **README**  //  
+Project overview & philosophy. 
+
+**Arduino**    //  
+Microcontroller code and behavioural logic
+
+**Electrical Schematics**    //  
+Wiring diagrams and circuit documentation.
+
+**Machine Learning**    //  
+Training models for expressive behaviors in Wekinator.
+
+**Mechanical Design & Fabrication**    //  
+Physical construction, mechanisms and fabrication.
+
+**OSC Communication**    //  
+Explanation of communication between P5.js, Processing, and Wekinator.
+
+**Documentation**    //  
+Unit tests, Debugging, and Prototypes.
+
+**Final Images**    //  
+Final prototypes, renders and photography.
+
 ## Our Team
 
 Developed by Innovation Design Engineering Students (IDE) at Imperial College London and Royal College of Art for the Cyber Physical Systems Module. 
