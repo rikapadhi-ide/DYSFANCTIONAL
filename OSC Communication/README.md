@@ -6,15 +6,13 @@ This section documents the Open Sound Control (OSC) communication system connect
 ## Contents
 - Processing/P5.js sketches
 - Input and output configurations
-- Port assignments
-- Communication documentation
 
 ## How It Works
 OSC enables real-time communication between different software components of the project.
 
 Visual inputs are processed by the machine learning system, which generates classification outputs. These outputs are transmitted through OSC to Processing, where they are interpreted and passed along to the Arduino for physical execution.
 
-This communication layer allows the fan's digital behaviour to translate into physical movement.
+This communication layer allows the fan's digital behavior to translate into physical movement.
 
 ## Configuration
 The system uses the following default Wekinator OSC ports:
