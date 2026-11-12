@@ -21,6 +21,6 @@ The electrical system connects the microcontroller, motors, sensors, and support
 
 ## Getting Started
 
-Refer to the schematics when assembling, troubleshooting, or modifying the electrical system.
+Refer to the schematics when assembling, troubleshooting, or modifying the electrical system. Our project was limited to a maximum of 5V, but can be easily changed to accommodate higher power.
 
 **Note:** Always check power requirements and connections before supplying power to the circuit.
