@@ -5,8 +5,6 @@
 This section documents the electrical architecture of the fan, including its components, connections, and power distribution.
 
 ## Contents
-
--   Circuit diagrams
     
 -   Wiring schematics
     
@@ -19,9 +17,7 @@ This section documents the electrical architecture of the fan, including its com
 
 ## How It Works
 
-The electrical system connects the microcontroller, motors, sensors, and supporting components to enable the fan's interactive behaviours.
-
-The schematics provide a reference for understanding how the individual electronic components communicate and operate together.
+The electrical system connects the microcontroller, motors, sensors, and supporting components to enable the fan's interactive behaviors. The schematics provide a reference for understanding how the individual electronic components communicate and operate together.
 
 ## Getting Started
 
