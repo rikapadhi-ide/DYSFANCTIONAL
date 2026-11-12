@@ -34,24 +34,26 @@ Our project combines physical prototyping, electronics, and interactive programm
 
 **Hardware**
 
--   [Arm Joints]
+-   [Robotic Arms]
 
-- [Base Cover]
+- [Fan Base & Cover]
 
-- [Fan Cage & Motor Housing]
+- [Cage with Display Housing]
     
--   [Motors and actuators]
+-   [Circular Display Module]
     
--   [Sensors]
+-   [Webcam]
+
+-   [Servo Motors]
     
--   [Microcontroller]
+-   [ESP32-3S Microcontroller]
     
 -   [Power supply]
     
 
 **Software**
 
--   [Processing/PJ5S]
+-   [Processing & PJ5S]
     
 -   [Arduino]
     
