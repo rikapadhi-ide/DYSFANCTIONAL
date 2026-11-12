@@ -30,8 +30,10 @@ The Arduino acts as the physical control system of the fan. It receives commands
 
 1.  Open the relevant `.ino` file in Arduino IDE.
     
-2.  Connect the Arduino board.
+2.  Connect the ESP32-3S board.
     
 3.  Select the correct board and serial port.
+
+4.  Connect the External motors or Display following the Electrical Schematics diagram.
     
-4.  Upload the sketch.
+5.  Upload the sketch.
