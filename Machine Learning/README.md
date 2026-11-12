@@ -2,17 +2,15 @@
 
 ## Overview
 
-This section contains the machine learning models and training files used to interpret visual inputs and determine the fan's behavioural responses.
+This section contains the machine learning models and training files used to interpret visual inputs and determine the fan's behavioral responses.
 
 ## Contents
 
 -   Wekinator project files
     
--   Training datasets
-    
 -   Input configurations
     
--   Classification models
+-   Classifications
     
 -   Training documentation
     
