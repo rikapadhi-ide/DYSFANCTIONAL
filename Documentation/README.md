@@ -5,10 +5,8 @@ This section documents the iterative development, testing, and refinement of the
 
 ## Contents
 - Prototyping documentation
-- Unit tests and test results
-- Debugging records
-- Iteration and development notes
-- Experimental observations
+- Unit tests
+- Iteration and development
 
 ## How It Works
 This section provides a record of the project's development process, documenting how our individual components were prototyped, tested, evaluated, and refined. It captures technical challenges, troubleshooting processes, and lessons learned throughout development, providing insight into how the final system evolved.
