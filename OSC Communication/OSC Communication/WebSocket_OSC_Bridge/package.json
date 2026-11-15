@@ -1,0 +1,9 @@
+{
+  "name": "dysfanctional-input-bridge",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Local 38-feature WebSocket to Wekinator OSC bridge",
+  "scripts": { "start": "node bridge.js" },
+  "engines": { "node": ">=18" },
+  "dependencies": { "ws": "^8.18.0" }
+}
