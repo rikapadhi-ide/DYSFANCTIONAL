@@ -1,0 +1,313 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>DYSFANCTIONAL · Motion Studio</title><style>
+:root{color-scheme:dark;--bg:#10151c;--card:#1b2430;--muted:#a8b8c9;--accent:#ff684d}*{box-sizing:border-box}body{margin:0;background:var(--bg);color:#f3f5f7;font:14px system-ui,sans-serif}header{padding:22px 28px;border-bottom:1px solid #2b3746;display:flex;justify-content:space-between;gap:15px;align-items:center}h1{font-size:21px;letter-spacing:2px;margin:0}header span{font-size:12px;color:var(--muted)}main{display:grid;grid-template-columns:minmax(0,1fr) 340px;min-height:calc(100vh - 76px)}#scene{position:sticky;top:0;height:100vh;min-height:620px;background:radial-gradient(ellipse at 50% 40%,#243747,#101820 70%)}#view{width:100%;height:100%;position:absolute;touch-action:none}#hint{position:absolute;left:22px;bottom:20px;color:var(--muted);pointer-events:none;font-size:12px}.badge{position:absolute;top:20px;left:20px;padding:9px 13px;background:#10151cc9;border:1px solid #425363;border-radius:20px;color:#e3edf5}.views{position:absolute;right:16px;top:15px;display:flex;gap:5px}aside{padding:20px;border-left:1px solid #2b3746;background:#131b25}button,select{font:inherit;color:inherit;background:#24313f;border:1px solid #405163;border-radius:8px;padding:9px 12px;cursor:pointer}button:hover{border-color:#ffad93}button.active{background:var(--accent);color:#111;border-color:var(--accent)}.modes{display:grid;grid-template-columns:1fr 1fr;gap:8px}.modes button{text-align:left;min-height:64px}.modes b{display:block;font-size:15px}.modes small{color:inherit;opacity:.8}h2{font-size:19px;margin:22px 0 6px}p{line-height:1.65;color:var(--muted);margin:7px 0}.status{padding:13px;background:var(--card);border-radius:10px;margin:14px 0}.row{display:flex;align-items:center;justify-content:space-between;gap:10px;margin:10px 0}.row label{font-size:13px}.mono{font:13px ui-monospace,monospace;color:#dce8f0}input[type=range]{width:100%;accent-color:var(--accent)}#eye{width:100px;height:100px;border-radius:50%;border:4px solid #283746}.eyeRow{display:flex;gap:15px;align-items:center;margin:20px 0}.angle{display:grid;grid-template-columns:1fr 1fr 1fr;gap:7px}.angle div{background:#202c38;padding:10px 5px;text-align:center;border-radius:8px}.angle strong{font-size:19px;display:block}.angle span{font-size:11px;color:var(--muted)}details{margin-top:20px;border-top:1px solid #354352;padding-top:14px}summary{cursor:pointer;color:#c5d3df}.small{font-size:12px}.legend{color:#a7bccb;font-size:12px}.dot{display:inline-block;width:8px;height:8px;border-radius:50%;margin-right:5px}.foot{padding:15px 28px;color:#8496a7;font-size:12px;border-top:1px solid #293746}@media(max-width:850px){main{grid-template-columns:1fr}#scene{position:relative;height:470px;min-height:470px}aside{border-left:0}header span{display:none}} </style></head><body>
+<header><h1>DYSFANCTIONAL <span>/ MOTION STUDIO</span></h1><span>Offline 3D motion preview · No ESP32 connection</span></header>
+<main><div id="scene"><canvas id="view"></canvas><div class="badge" id="badge">1 · Avoid greeting</div><div class="views"><button id="persp">Perspective</button><button id="front">Front</button><button id="side">Side</button></div><div id="hint">Drag: orbit · Scroll / pinch: zoom · 1–4: actions · Space: play/pause<br>Joint markers: orange base · teal arm · purple head</div></div>
+<aside><div class="modes"><button data-mode="1"><b>1 Avoid greeting</b><small>Turn away + shake</small></button><button data-mode="2"><b>2 Threat</b><small>Retract + hold gaze</small></button><button data-mode="3"><b>3 Begging</b><small>Sigh + reluctant nod</small></button><button data-mode="4"><b>4 Default</b><small>Doze and wake</small></button></div>
+<h2 id="title"></h2><p id="description"></p><div class="status"><div class="row"><b id="phase"></b><span id="clock" class="mono"></span></div><input aria-label="Seek time" id="timeline" type="range" min="0" max="19" step="0.01" value="0"><div class="row"><button id="play">Pause</button><button id="restart">Restart</button><select id="speed" aria-label="Playback speed"><option value="0.5">0.5×</option><option value="1" selected>1×</option><option value="2">2×</option></select></div><label class="small"><input type="checkbox" id="delay"> Include 3-second recognition wait</label><p class="small">Action buttons restart the preview. This previews choreography, not serial input locking.</p></div>
+<div class="status"><div class="row"><b>Joint angle controls</b><label><input id="manual" type="checkbox"> Manual</label></div><p class="small">Drag any slider to pause the action and pose the model. Ranges match the current firmware limits. Use Resume action to return to the original timeline.</p><div class="row"><label for="joint0">Base</label><output id="jointValue0">90.0°</output></div><input id="joint0" type="range" min="70" max="115" step="0.5" value="90" aria-label="Base command angle"><div class="row small"><span>70°</span><span>115°</span></div><div class="row"><label for="joint1">Arm</label><output id="jointValue1">90.0°</output></div><input id="joint1" type="range" min="60" max="115" step="0.5" value="90" aria-label="Arm command angle"><div class="row small"><span>60°</span><span>115°</span></div><div class="row"><label for="joint2">Head</label><output id="jointValue2">90.0°</output></div><input id="joint2" type="range" min="60" max="110" step="0.5" value="90" aria-label="Head command angle"><div class="row small"><span>60°</span><span>110°</span></div><div class="row"><button id="homePose">All 90°</button><button id="resumeAction">Resume action</button></div><p class="small">Manual posing changes only the preview pose. It does not edit motion keyframes or send commands to a robot.</p></div><div class="angle"><div><span>Base · pin 4</span><strong id="a0"></strong></div><div><span>Arm · pin 5</span><strong id="a1"></strong></div><div><span>Head · pin 6</span><strong id="a2"></strong></div></div>
+<div class="status"><b>State 2 compensation</b><div class="row"><label for="compSign">Arm-to-head sign</label><select id="compSign"><option value="1">+ (target +=)</option><option value="-1">− (target -=)</option></select></div><p class="small">Changing this restarts the preview. The default model uses +. Match this sign and the assembly direction to your real mechanism.</p><p id="limitStatus" class="small" role="status"></p><p class="small">At a 90° entry, + compensation reaches a 60° head target. Negative tremble targets can fall below the 60° limit and are clipped. The motion follower also introduces gaze lag. This is compensation, not a guaranteed level gaze.</p></div><div class="eyeRow"><canvas id="eye" width="240" height="240"></canvas><div><b id="fan"></b><p class="small">Spinning blades indicate a fan ON request.<br>The firmware default disables the fan.</p></div></div>
+<details open><summary>Match assembly direction</summary><p class="small">These settings affect this preview only. They do not change Arduino code.</p><div class="row"><label>Reverse base</label><input type="checkbox" id="rev0"></div><div class="row"><label>Reverse arm</label><input type="checkbox" id="rev1"></div><div class="row"><label>Reverse head</label><input type="checkbox" id="rev2"></div><div class="row"><label>Display travel per 10° command</label><select id="gain"><option value="1">10° · assume 1:1</option><option value="0.5">5° · reduced</option><option value="1.5">15° · amplified</option></select></div><p class="small">Command angles have not been calibrated to physical shaft angles. Actual travel depends on the servo pulse range.</p></details>
+<details><summary>Model and timeline notes</summary><p class="small">Simplified from your side-view image: base yaw, arm pitch, then head pitch. Moving the arm also moves and rotates the head. This is not a dimensionally verified CAD model.</p><p class="small">Each action starts at 90/90/90°. The original timeline, angle limits, speed and acceleration limits are simulated at 10 ms intervals. Actions 1–3 return to default 4 after 10 seconds, then the preview stops after showing the return.</p><p class="small">Mass, current, collisions, servo latency, flex and backlash are not simulated. This does not validate whether the hardware can drive a 250 g head.</p></details></aside></main><div class="foot">Based on MotionCore.h / EyeArt2.h · Eye animation and three-joint motion preview · Works offline</div>
+<script>
+const BG=0xFB08,BLUE=0x0BFD,INK=0x29A8,WHITE=0xFFDE;
+const pixels=new Uint16Array(57600);
+const minv=Math.min,maxv=Math.max,absf=Math.abs,mod=(a,b)=>a%b;
+function clearFrame(c){pixels.fill(c);}
+function vstrip(x,a,b,c){x=Math.trunc(x);if(x<0||x>=240||a>b)return;
+let first=Math.ceil(Math.max(0,a)),last=Math.floor(Math.min(239,b));
+for(let y=first;y<=last;y++)pixels[y*240+x]=c;}
+function disk(cx,cy,r,c){for(let x=Math.ceil(cx-r);x<=Math.floor(cx+r);x++){
+let d=x-cx,h=Math.sqrt(Math.max(0,r*r-d*d));vstrip(x,cy-h,cy+h,c);}}
+// Tune these values first. Both preview and Arduino use these defaults.
+// ROUGHNESS: increase for wobblier hand-drawn lines; 0 = clean geometry.
+const ROUGHNESS=1.15;
+// MOTION_SPEED: 1 = normal, 1.3 = 30% faster, 0.7 = slower.
+const MOTION_SPEED=1.0;
+// FEAR_SHAKE: amplitude in pixels; increase for more dramatic trembling.
+const FEAR_SHAKE=2.0;
+// Transition/smoothing time in seconds. 0.055 is brisk; 0.12 is softer.
+const TRANSITION_SECONDS=0.055;
+const PI_F=3.14159265359;
+let mode=3;
+let modeStart=0, smoothOpen=0.94, smoothGX=0, smoothGY=0;
+let smoothIris=37, smoothPupil=15, smoothCY=133, smoothBrow=0, smoothTilt=0;
+let topEdge=new Float32Array(240),bottomEdge=new Float32Array(240);
+
+function sat(x) { return minv(1.0,maxv(0.0,x)); }
+function ease(x) { x=sat(x); return x*x*(3.0-2.0*x); }
+function mixv(a,b,k) { return a+(b-a)*k; }
+// Fixed spatial wobble: no random noise per frame, so lines do not flicker.
+function wobble(u,seed) {
+ return ROUGHNESS*(0.52*Math.sin(13.0*u+seed)+0.28*Math.sin(29.0*u+seed*2.0));
+}
+function blink(t,start,length) {
+ let q=(t-start)/length;
+ if(q<0.0 || q>1.0) return 1.0;
+ return 1.0-Math.sin(q*PI_F);
+}
+function selectMode(value,now) {
+ if(value<1 || value>4 || value==mode) return;
+ mode=value; modeStart=now;
+}
+function renderEye(now,dt) {
+ let t=(now-modeStart)*MOTION_SPEED;
+ let open=1.0, gx=0.0, gy=0.0, iris=37.0, pupil=15.0;
+ let cy=133.0, brow=0.0, tilt=0.0, shakeX=0.0, shakeY=0.0;
+ if(mode==1) {
+   // 6 second gag: heavy lids, asleep, startled awake, then drooping again.
+   let q=mod(t,6.0);
+   if(q<2.8) open=mixv(0.52,0.025,ease(q/2.8));
+   else if(q<4.1) open=0.025;
+   else if(q<4.28) open=mixv(0.025,1.22,ease((q-4.1)/0.18));
+   else if(q<4.85) open=1.22-0.10*Math.sin((q-4.28)*15.0);
+   else open=mixv(1.12,0.52,ease((q-4.85)/1.15));
+   cy=133.0+8.0*(1.0-sat(open));
+   gy=5.0*(1.0-sat(open)); gx=3.0*Math.sin(t*0.8);
+   brow=-7.0*(1.0-sat(open)); tilt=-5.0;
+ } else if(mode==2) {
+   open=1.18; iris=29.0; pupil=8.0;
+   shakeX=FEAR_SHAKE*(Math.sin(43.0*t)+0.35*Math.sin(67.0*t));
+   shakeY=FEAR_SHAKE*0.45*Math.sin(51.0*t);
+   gx=6.0*Math.sin(15.0*t); gy=-2.0;
+   brow=10.0; tilt=3.0*Math.sin(8.0*t);
+   let q=mod(t,3.7);
+   open*=blink(q,3.0,0.13)*blink(q,3.22,0.13);
+ } else if(mode==3) {
+   // Reluctant kindness: side-eye, eye-roll, long sigh, then a tiny agreeing nod.
+   // Repeats every 8 seconds; repeated serial class messages do not restart it.
+   let q=minv(t,7.19);
+   open=0.62; gx=22.0; gy=0.0; brow=-3.0; tilt=-9.0;
+   if(q<1.2) {
+     gx=22.0*ease(q/0.35);
+   } else if(q<2.3) {
+     let a=ease((q-1.2)/1.1);
+     gx=22.0*Math.cos(a*PI_F);
+     gy=-22.0*Math.sin(a*PI_F);
+     open=0.62+0.23*Math.sin(a*PI_F);
+     brow=-3.0+6.0*Math.sin(a*PI_F); tilt=-9.0+5.0*a;
+   } else if(q<3.0) {
+     let a=ease((q-2.3)/0.7);
+     gx=mixv(-22.0,0.0,a); open=mixv(0.62,0.025,a);
+     cy=133.0+6.0*a; brow=-3.0-5.0*a; tilt=-4.0;
+   } else if(q<3.9) {
+     // Closed-eye exhale: a slow downward settle, not a sleepy head bob.
+     let a=ease((q-3.0)/0.9);
+     gx=0.0; open=0.025; cy=139.0+3.0*a;
+     brow=-8.0-2.0*a; tilt=-4.0;
+   } else if(q<4.6) {
+     let a=ease((q-3.9)/0.7);
+     gx=0.0; open=mixv(0.025,0.68,a);
+     cy=mixv(142.0,133.0,a); brow=mixv(-10.0,1.0,a);
+     tilt=mixv(-4.0,7.0,a);
+   } else if(q<5.3) {
+     let a=(q-4.6)/0.7;
+     gx=0.0; gy=3.0*Math.sin(a*PI_F);
+     open=0.68-0.12*Math.sin(a*PI_F);
+     cy=133.0+5.0*Math.sin(a*PI_F);
+     brow=1.0; tilt=7.0;
+   } else if(q<7.2) {
+     gx=0.0; open=0.68*blink(q,6.4,0.28);
+     brow=1.0; tilt=7.0;
+   } else {
+     let a=ease((q-7.2)/0.8);
+     gx=22.0*a; open=mixv(0.68,0.62,a);
+     brow=mixv(1.0,-3.0,a); tilt=mixv(7.0,-9.0,a);
+   }
+ } else {
+   // Mode 4 retains the original normal look-around.
+   let offset=mode==4 ? 1.4 : 0.0;
+   let q=mod(t+offset,7.0);
+   if(q<1.4) gx=0.0;
+   else if(q<1.65) gx=22.0*ease((q-1.4)/0.25);
+   else if(q<2.65) gx=22.0;
+   else if(q<2.95) gx=mixv(22.0,-20.0,ease((q-2.65)/0.3));
+   else if(q<4.0) gx=-20.0;
+   else if(q<4.3) gx=-20.0*(1.0-ease((q-4.0)/0.3));
+   gy=1.8*Math.sin(t*1.2);
+   open=(0.94+0.025*Math.sin(t*1.8))*blink(q,4.7,0.24)*blink(q,5.12,0.18);
+   brow=2.0*Math.sin(t*1.2); tilt=gx*0.14;
+ }
+ // Smaller TRANSITION_SECONDS = snappier transitions; larger = softer/slower.
+ let k=1.0-Math.exp(-minv(dt,0.1)/TRANSITION_SECONDS);
+ smoothOpen=mixv(smoothOpen,open,k); smoothGX=mixv(smoothGX,gx,k);
+ smoothGY=mixv(smoothGY,gy,k); smoothIris=mixv(smoothIris,iris,k);
+ smoothPupil=mixv(smoothPupil,pupil,k); smoothCY=mixv(smoothCY,cy,k);
+ smoothBrow=mixv(smoothBrow,brow,k); smoothTilt=mixv(smoothTilt,tilt,k);
+ clearFrame(BG);
+ let cx=120.0+shakeX, ey=smoothCY+shakeY;
+ let ix=cx+smoothGX, iy=ey+smoothGY;
+ // Draw vertical strips; iris is clipped by upper/lower lids, never floats outside.
+ for(let x=17;x<=223;x++) {
+   let u=(x-cx)/99.0;
+   if(absf(u)>1.0) continue;
+   let arch=maxv(0.0,1.0-u*u);
+   let top=ey-43.0*smoothOpen*arch+wobble(u,1.0)*arch;
+   let bottom=ey+37.0*smoothOpen*arch+wobble(u,3.0)*arch;
+   topEdge[x]=top; bottomEdge[x]=bottom;
+   vstrip(x,top,bottom,WHITE);
+   let dx=x-ix;
+   let rr=smoothIris+wobble(u,5.0)*0.4;
+   if(absf(dx)<rr) {
+     let hh=Math.sqrt(rr*rr-dx*dx);
+     vstrip(x,maxv(top,iy-hh),minv(bottom,iy+hh),INK);
+   }
+   rr-=2.7;
+   if(absf(dx)<rr) {
+     let hh=Math.sqrt(rr*rr-dx*dx);
+     vstrip(x,maxv(top,iy-hh),minv(bottom,iy+hh),BLUE);
+   }
+   rr=smoothPupil;
+   if(absf(dx)<rr) {
+     let hh=Math.sqrt(rr*rr-dx*dx);
+     vstrip(x,maxv(top,iy-hh),minv(bottom,iy+hh),INK);
+   }
+ }
+ // A mildly uneven ink contour, not eyelashes.
+ for(let x=17;x<=223;x++) {
+   let u=(x-cx)/99.0;
+   if(absf(u)>1.0) continue;
+   let r=1.9+0.35*Math.sin(u*9.0+1.0);
+   disk(x,topEdge[x],r,INK); disk(x,bottomEdge[x],r,INK);
+ }
+ // One separate expressive eyebrow, tapered like a brush stroke.
+ for(let x=45;x<=195;x++) {
+   let u=(x-120.0)/75.0;
+   let by=81.0-18.0*(1.0-u*u)-smoothBrow+smoothTilt*u;
+   by+=wobble(u,7.0);
+   let r=1.1+2.1*(1.0-u*u)+0.25*Math.sin(u*11.0);
+   disk(x+shakeX*0.5,by+shakeY*0.5,r,INK);
+ }
+}
+
+function clampf(x,lo,hi){return x<lo?lo:(x>hi?hi:x);}
+function ramp(x){x=clampf(x,0,1);return x*x*x*(10+x*(-15+6*x));}
+function track(k,n,t){
+ n=k.length;
+ if(t<=k[0][0])return k[0][1];
+ for(let i=1;i<n;i++)if(t<k[i][0]){let u=ramp((t-k[i-1][0])/(k[i][0]-k[i-1][0]));return k[i-1][1]+(k[i][1]-k[i-1][1])*u;}
+ return k[n-1][1];
+}
+// Nominal choreography. The acceleration-limited follower may lag this target.
+function targetAngle(state,axis,t,entry){
+ if(state==1){
+  if(axis==0){let k=[[0,entry],[.2,entry],[1.6,115],[2.5,115],[3.2,105],[4.0,115],[4.8,105],[5.6,115],[6.4,105],[7.2,115],[8.0,105],[8.8,115]];return track(k,12,t);}
+  if(axis==1){let k=[[0,entry],[1.6,entry],[2.5,90]];return track(k,3,t);}
+  let k=[[0,entry],[2.5,entry],[3.2,90]];return track(k,3,t);
+ }
+ if(state==2){
+  if(axis==1){let k=[[0,entry],[.15,entry],[1.6,60]];return track(k,3,t);}
+  if(axis==0){let k=[[0,entry],[2,entry],[3,90]];return track(k,3,t);}
+  if(t<4)return entry;
+  // Double-frequency nods around the initial head angle.
+  let q=mod(t-4,.7);let k=[[0,entry],[.175,entry+3],[.35,entry],[.525,entry-3],[.7,entry]];return track(k,5,q);
+ }
+ if(state==3){
+  if(axis==0){let k=[[0,entry],[.2,entry],[1.2,90]];return track(k,3,t);}
+  if(axis==1){let k=[[0,entry],[1.2,entry],[3.9,110]];return track(k,3,t);}
+  let k=[[0,entry],[3.0,entry],[3.9,80],[4.6,90],[4.95,86],[5.3,90],[6.8,100],[8.3,85],[9.8,90]];return track(k,9,t);
+ }
+ // Default: sequential entry, then a six-second cycle matching sleepy eyes.
+ if(t<3){
+  let start=axis==0?0:(axis==1?1:2);let end=axis==1?80:90;
+  let k=[[0,entry],[start+.01,entry],[start+1,end]];return track(k,3,t);
+ }
+ if(axis==0)return 90;if(axis==1)return 80;
+ let q=mod(t-3,6);let k=[[0,90],[2.8,65],[4.1,65],[4.85,100],[6,90]];return track(k,5,q);
+}
+
+
+const $=id=>document.getElementById(id),canvas=$('view'),cx=canvas.getContext('2d'),eyeCtx=$('eye').getContext('2d'),eyeImage=eyeCtx.createImageData(240,240);
+const titles=['','Avoid greeting','Wary retreat','Reluctant agreement','Doze and wake'];
+const desc=['','Turns toward 115°, then shakes the base between 105° and 115°. Head pitch settles at 90°.','Retracts toward 60° by a nominal 1.6 s, compensates head pitch using the arm command, then adds a 0.7 s tremble from 4 s. Limits and tracking lag remain active.','After a side-eye and sigh, leans forward and gives a reluctant nod. Requests the fan during the final section.','With the arm slightly slumped, slowly drops the head and then wakes up.'];
+let manual=false,manualAngles=[90,90,90];
+let selected=1,playTime=0,playing=true,samples=[],duration=19,yaw=.65,pitch=.20,zoom=1,w=800,h=650,last=0,lastEyeTime=-1,bladePhase=0;
+const rad=Math.PI/180,lo=[70,60,60],hi=[115,115,110],speeds=[24,20,45],accels=[60,45,150];
+function makeSamples(s,delay){
+ let out=[],p=[90,90,90],v=[0,0,0],entry=p.slice(),state=delay?4:s,start=0,triggered=!delay;
+ const total=(s===4?15:19)+(delay?3:0);
+ for(let n=0;n<=Math.round(total*100);n++){
+  let t=n/100;
+  if(!triggered&&n>=300){triggered=true;state=s;start=t;entry=p.slice();}
+  if(state!==4&&t-start>=10-1e-7){state=4;start=t;entry=p.slice();}
+  let age=t-start,headClipped=false,headRaw=p[2];
+  if(n>0)for(let i=0;i<3;i++){
+   let raw=targetAngle(state,i,age,entry[i]);
+   // Match the Arduino update order: arm is advanced before head compensation.
+   if(state===2&&i===2)raw+=Number($('compSign').value)*(p[1]-entry[1]);
+   if(i===2){headRaw=raw;headClipped=raw<lo[i]-1e-6||raw>hi[i]+1e-6;}
+   const target=clampf(raw,lo[i],hi[i]);
+   const desired=clampf((target-p[i])*5,-speeds[i],speeds[i]);
+   v[i]+=clampf(desired-v[i],-accels[i]*.01,accels[i]*.01);p[i]+=v[i]*.01;
+   if(p[i]<lo[i]){p[i]=lo[i];v[i]=0;}if(p[i]>hi[i]){p[i]=hi[i];v[i]=0;}
+  }
+  out.push({t,state,age,headClipped,headRaw,p:p.slice(),waiting:!triggered,fan:state===3&&age>=5.8&&age<10});
+ }
+ return out;
+}
+function resetEye(){smoothOpen=.94;smoothGX=smoothGY=0;smoothIris=37;smoothPupil=15;smoothCY=133;smoothBrow=smoothTilt=0;}
+function startScene(s){manual=false;$('manual').checked=false;selected=s;samples=makeSamples(s,$('delay').checked);duration=samples.at(-1).t;playTime=0;playing=true;lastEyeTime=-1;resetEye();$('timeline').max=duration;$('play').textContent='Pause';$('title').textContent=titles[s];$('description').textContent=desc[s];document.querySelectorAll('[data-mode]').forEach(b=>b.classList.toggle('active',+b.dataset.mode===s));}
+const add=(a,b)=>a.map((x,i)=>x+b[i]),sub=(a,b)=>a.map((x,i)=>x-b[i]),mul=(a,k)=>a.map(x=>x*k),dot=(a,b)=>a.reduce((s,x,i)=>s+x*b[i],0),cross=(a,b)=>[a[1]*b[2]-a[2]*b[1],a[2]*b[0]-a[0]*b[2],a[0]*b[1]-a[1]*b[0]],norm=a=>mul(a,1/(Math.hypot(...a)||1));
+function rx(p,a){return[p[0],p[1]*Math.cos(a)-p[2]*Math.sin(a),p[1]*Math.sin(a)+p[2]*Math.cos(a)];}
+function ry(p,a){return[p[0]*Math.cos(a)+p[2]*Math.sin(a),p[1],-p[0]*Math.sin(a)+p[2]*Math.cos(a)];}
+function camera(p){let q=ry(sub(p,[0,116,0]),-yaw);return rx(q,pitch);}
+function project(p){let q=camera(p),scale=Math.min(w/450,h/330)*zoom*650/(650-q[2]);return [w/2+q[0]*scale,h*.52-q[1]*scale,q[2]];}
+let shapes=[];
+function face(points,color,stroke='#6b829144'){shapes.push({points,color,stroke,z:points.reduce((s,p)=>s+camera(p)[2],0)/points.length});}
+function ring(center,axis,r,n=32){let d=norm(axis),u=norm(cross(d,Math.abs(d[1])<.9?[0,1,0]:[1,0,0])),v=cross(d,u);return Array.from({length:n},(_,i)=>add(center,add(mul(u,r*Math.cos(i*2*Math.PI/n)),mul(v,r*Math.sin(i*2*Math.PI/n)))));}
+function tube(a,b,r,color,n=24){let aa=ring(a,sub(b,a),r,n),bb=ring(b,sub(b,a),r,n);for(let i=0;i<n;i++)face([aa[i],aa[(i+1)%n],bb[(i+1)%n],bb[i]],color);face(aa,color);face(bb,color);}
+function box(center,size,transform,color){const p=[];for(let x of [-1,1])for(let y of [-1,1])for(let z of [-1,1])p.push(transform(add(center,[x*size[0]/2,y*size[1]/2,z*size[2]/2])));for(const f of [[0,1,3,2],[4,6,7,5],[0,4,5,1],[2,3,7,6],[0,2,6,4],[1,5,7,3]])face(f.map(i=>p[i]),color);}
+function line3(points,color,width=1){cx.beginPath();points.forEach((p,i)=>{let q=project(p);i?cx.lineTo(q[0],q[1]):cx.moveTo(q[0],q[1]);});cx.strokeStyle=color;cx.lineWidth=width;cx.stroke();}
+function phase(s){if(s.waiting)return'Confirming input · 3 s';if(s.state===4)return s.age<3?'Returning to default':((s.age-3)%6<4.1?'Drifting off':'Waking up');if(s.state===1)return s.age<1.6?'Turning away':s.age<2.5?'Holding turned pose':'Shaking left and right';if(s.state===2)return s.age<1.6?'Retract + compensate':s.age<4?'Settle + hold gaze':'Fast wary tremble';return s.age<1.2?'Side-eye':s.age<2.3?'Eye roll':s.age<3.9?'Sigh and lean forward':s.age<4.6?'Open eye and raise head':s.age<5.3?'Small acceptance nod':s.age<5.8?'Brief pause':'Fan ON request';}
+function paintEye(sample){
+ if(Math.abs(playTime-lastEyeTime)<.025)return;
+ let seek=lastEyeTime<0||playTime<lastEyeTime||playTime-lastEyeTime>.15;
+ if(seek)resetEye();mode=[0,4,2,3,1][sample.state];let age=sample.state===4?Math.max(0,sample.age-3):sample.age;modeStart=playTime-age;
+ renderEye(playTime,seek?.1:Math.max(.001,playTime-lastEyeTime));
+ for(let i=0;i<57600;i++){let c=pixels[i],j=i*4;eyeImage.data[j]=((c>>11)&31)*255/31;eyeImage.data[j+1]=((c>>5)&63)*255/63;eyeImage.data[j+2]=(c&31)*255/31;eyeImage.data[j+3]=255;}eyeCtx.putImageData(eyeImage,0,0);lastEyeTime=playTime;
+}
+function draw(sample){
+ const rect=canvas.getBoundingClientRect();w=rect.width;h=rect.height;let dpr=Math.min(devicePixelRatio||1,2);if(canvas.width!==Math.round(w*dpr)||canvas.height!==Math.round(h*dpr)){canvas.width=Math.round(w*dpr);canvas.height=Math.round(h*dpr);}cx.setTransform(dpr,0,0,dpr,0,0);cx.clearRect(0,0,w,h);
+ for(let k=-250;k<=250;k+=25){line3([[k,0,-250],[k,0,250]],'#9fbacf12');line3([[-250,0,k],[250,0,k]],'#9fbacf12');}
+ const gain=+$('gain').value,sgn=i=>$('rev'+i).checked?-1:1;
+ const base=(sample.p[0]-90)*rad*gain*sgn(0),arm=(sample.p[1]-90)*rad*gain*sgn(1),head=-(sample.p[2]-90)*rad*gain*sgn(2);
+ const B=p=>ry(p,base),shoulder=[0,78,0],A=p=>B(add(shoulder,rx(p,arm))),neckLocal=[0,65,40],neck=A(neckLocal),H=p=>A(add(neckLocal,rx(p,head)));
+ shapes=[];tube([0,2,0],[0,10,0],73,'#2a3745');tube([0,10,0],[0,64,0],36,'#506777');tube(B([0,64,0]),B(shoulder),19,'#3e596a');
+ box([0,63,0],[28,40,23],B,'#242c39');tube(A([0,0,0]),neck,15,'#79909d');
+ box([0,2,0],[31,41,24],p=>A(p),'#202936');box([0,0,0],[42,24,25],p=>H(p),'#202936');
+ tube(B(add(shoulder,[-22,0,0])),B(add(shoulder,[22,0,0])),7,'#53c8c3');tube(H([-28,0,0]),H([28,0,0]),7,'#ba99ff');
+ tube([0,63,0],[0,68,0],22,'#ff684d');
+ // Fan hub, open protective frame, and three blades.
+ tube(H([0,0,8]),H([0,0,40]),16,'#354a5b');
+ for(let i=0;i<12;i++){let t=i*Math.PI/6;let p0=H([Math.cos(t)*23,Math.sin(t)*23,48]),p1=H([Math.cos(t)*76,Math.sin(t)*76,43]),p2=H([Math.cos(t)*74,Math.sin(t)*74,25]);tube(p0,p1,1.6,'#83a5b8',6);tube(p1,p2,1.6,'#83a5b8',6);}
+ const outer=Array.from({length:48},(_,i)=>H([76*Math.cos(i*Math.PI/24),76*Math.sin(i*Math.PI/24),43]));for(let i=0;i<48;i++)tube(outer[i],outer[(i+1)%48],1.7,'#83a5b8',5);
+ const spin=sample.fan?bladePhase:0;
+ for(let i=0;i<3;i++){let angle=i*2*Math.PI/3+spin;let verts=[[12,-6],[48,-15],[69,-5],[66,7],[27,13]];face(verts.map(([x,y])=>H([x*Math.cos(angle)-y*Math.sin(angle),x*Math.sin(angle)+y*Math.cos(angle),36])),'#ff684d','#ffae8255');}
+ tube(H([0,0,43]),H([0,0,54]),26,'#203a4c');
+ // Eye plane is an affine projection of the exact 240px eye texture.
+ const ec=H([0,0,54.1]),normal=sub(H([0,0,55.1]),ec),camWorld=add(ry(rx([0,0,650],-pitch),yaw),[0,116,0]);
+ if(dot(normal,sub(camWorld,ec))>0)shapes.push({eye:true,z:camera(ec)[2],a:H([-24,24,54.2]),b:H([24,24,54.2]),c:H([-24,-24,54.2])});
+ shapes.sort((a,b)=>a.z-b.z);
+ for(const f of shapes){if(f.eye){let a=project(f.a),b=project(f.b),c=project(f.c);cx.save();cx.transform((b[0]-a[0])/240,(b[1]-a[1])/240,(c[0]-a[0])/240,(c[1]-a[1])/240,a[0],a[1]);cx.beginPath();cx.arc(120,120,120,0,Math.PI*2);cx.clip();cx.drawImage($('eye'),0,0);cx.restore();continue;}
+ const pp=f.points.map(project);cx.beginPath();pp.forEach((p,i)=>i?cx.lineTo(p[0],p[1]):cx.moveTo(p[0],p[1]));cx.closePath();cx.fillStyle=f.color;cx.fill();cx.strokeStyle=f.stroke;cx.lineWidth=.6;cx.stroke();}
+ const label=(p,txt,color,dx)=>{let q=project(p);cx.font='12px system-ui';cx.fillStyle=color;cx.beginPath();cx.arc(q[0],q[1],4,0,7);cx.fill();cx.fillText(txt,q[0]+dx,q[1]-10);};
+ label(B([0,65,0]),'BASE','#ff967e',25);label(A([0,0,0]),'ARM','#73e0d8',35);label(neck,'HEAD','#ccb5ff',35);
+ $('limitStatus').textContent=manual?'Manual pose: within command limits':sample.headClipped?'HEAD TARGET CLIPPED: '+sample.headRaw.toFixed(1)+'° → '+clampf(sample.headRaw,lo[2],hi[2]).toFixed(1)+'°':'Head target within limits';$('limitStatus').style.color=(!manual&&sample.headClipped)?'#ffad70':'#a8b8c9';
+ $('badge').textContent=manual?'Manual pose':sample.waiting?'3-second recognition wait':sample.state+' · '+titles[sample.state];$('phase').textContent=manual?'Manual joint angles':phase(sample);$('clock').textContent=playTime.toFixed(1)+' / '+duration+' s';$('timeline').value=playTime;sample.p.forEach((a,i)=>$('a'+i).textContent=a.toFixed(1)+'°');$('fan').textContent=sample.fan?'● FAN REQUEST ON':'○ FAN REQUEST OFF';$('fan').style.color=sample.fan?'#8bedc9':'#a8b8c9';
+}
+function frame(stamp){let dt=last?Math.min(.1,(stamp-last)/1000):0;last=stamp;if(playing&&!manual){playTime=Math.min(duration,playTime+dt*+$('speed').value);if(playTime>=duration){playing=false;$('play').textContent='Play';}}let sample=samples[Math.min(samples.length-1,Math.round(playTime*100))];if(manual)sample={...sample,p:manualAngles.slice(),fan:false};else syncSliders(sample.p);if(playing&&sample.fan)bladePhase+=dt*12;paintEye(sample);draw(sample);requestAnimationFrame(frame);}
+document.querySelectorAll('[data-mode]').forEach(b=>b.onclick=()=>startScene(+b.dataset.mode));$('delay').onchange=()=>startScene(selected);$('restart').onclick=()=>startScene(selected);$('play').onclick=()=>{if(manual){resumeAction();return;}if(playTime>=duration)playTime=0;playing=!playing;$('play').textContent=playing?'Pause':'Play';};$('timeline').oninput=e=>{manual=false;$('manual').checked=false;playing=false;playTime=+e.target.value;$('play').textContent='Play';};
+$('front').onclick=()=>{yaw=0;pitch=.05;};$('side').onclick=()=>{yaw=Math.PI/2;pitch=.05;};$('persp').onclick=()=>{yaw=.65;pitch=.20;zoom=1;};
+const pointers=new Map();let pinch=0;canvas.onpointerdown=e=>{canvas.setPointerCapture(e.pointerId);pointers.set(e.pointerId,[e.clientX,e.clientY]);};canvas.onpointermove=e=>{if(!pointers.has(e.pointerId))return;let prev=pointers.get(e.pointerId);pointers.set(e.pointerId,[e.clientX,e.clientY]);if(pointers.size===1){yaw-=(e.clientX-prev[0])*.009;pitch=clampf(pitch+(e.clientY-prev[1])*.006,-.6,1.1);}else{let ps=[...pointers.values()],d=Math.hypot(ps[0][0]-ps[1][0],ps[0][1]-ps[1][1]);if(pinch)zoom=clampf(zoom*d/pinch,.5,2.8);pinch=d;}};canvas.onpointerup=canvas.onpointercancel=e=>{pointers.delete(e.pointerId);pinch=0;};canvas.addEventListener('wheel',e=>{e.preventDefault();zoom=clampf(zoom*Math.exp(-e.deltaY*.001),.5,2.8);},{passive:false});
+window.addEventListener('keydown',e=>{if(['INPUT','SELECT'].includes(e.target.tagName))return;if('1234'.includes(e.key)&&e.key.length===1)startScene(+e.key);if(e.code==='Space'){e.preventDefault();$('play').click();}});
+
+function syncSliders(angles){angles.forEach((v,i)=>{$('joint'+i).value=v;$('jointValue'+i).textContent=v.toFixed(1)+'°';});}
+function enterManual(){if(!manual){manualAngles=samples[Math.min(samples.length-1,Math.round(playTime*100))].p.slice();}manual=true;playing=false;$('manual').checked=true;$('play').textContent='Resume';syncSliders(manualAngles);}
+function resumeAction(){manual=false;$('manual').checked=false;playing=true;if(playTime>=duration)playTime=0;$('play').textContent='Pause';}
+for(let i=0;i<3;i++)$('joint'+i).oninput=e=>{const value=+e.target.value;enterManual();manualAngles[i]=clampf(value,lo[i],hi[i]);syncSliders(manualAngles);};
+$('manual').onchange=e=>{if(e.target.checked)enterManual();else resumeAction();};
+$('homePose').onclick=()=>{enterManual();manualAngles=[90,90,90];syncSliders(manualAngles);};
+$('resumeAction').onclick=resumeAction;
+$('compSign').onchange=()=>startScene(selected);
+startScene(1);requestAnimationFrame(frame);
+
+</script></body></html>
