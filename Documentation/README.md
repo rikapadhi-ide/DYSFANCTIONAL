@@ -5,7 +5,6 @@ This section documents the iterative development, testing, and refinement of the
 
 ## Contents
 - Prototyping documentation
-- Unit tests
 - Iteration and development
 
 ## How It Works
