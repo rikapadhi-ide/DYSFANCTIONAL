@@ -28,4 +28,19 @@ Ensure that the relevant applications are configured to use matching ports.
 - Wekinator
 - Arduino serial connection
 
+## Our Connection Setup
 
+The p5.js camera code sends its data to a Node.js bridge on port 8080. The bridge converts this into OSC messages for Wekinator.
+
+- Wekinator input message: `/wek/inputs`
+- Wekinator output message: `/wek/outputs`
+- Processing sends class numbers 1–4 to the ESP32 over USB at 9600 baud.
+- Change `COM6` in the Processing sketch to your board's port. Close Arduino Serial Monitor before running Processing.
+
+## Keeping the Output Stable
+
+The predictions can change quickly, so Processing collects them for three seconds and sends the class that appeared most often.
+
+If the result stays the same, it is not sent again. This prevents class 1 from restarting its movement every three seconds.
+
+The Processing window shows the incoming class, vote counts and last sent class. Restart Processing after resetting the board. If no signal arrives, nothing is sent; this does not automatically stop the fan.
