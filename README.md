@@ -1,4 +1,3 @@
-**
 # DYSFANCTIONAL
 
 **A new standard in human–appliance relations.** 
