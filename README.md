@@ -91,7 +91,7 @@ Final prototypes, renders and photography.
 
 ## Next Steps
 
-Our team plans on continuing our project and exploring different movements, materials, and increased power source (our project guidelines limited our sources to 5V). We want to make the motor movement smoother, potentially new and interesting movements, and in the future add more elements to make Sir Vents-A-Lot more autonomy (such as running away or a pressure sensitive button)
+Our team plans on continuing our project and exploring different movements, materials, and increased power source (our project guidelines limited our sources to 5V). We want to make the motor movement smoother, solder all the components, potentially new and interesting movements, and in the future add more elements to make Sir Vents-A-Lot more autonomy (such as running away or a pressure sensitive button)
 
 ## Our Team
 
