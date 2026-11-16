@@ -60,8 +60,12 @@ We recorded 4,504 training examples across four classes:
 | 3 | Begging | 1,035 |
 | 4 | Sleepy | 1,296 |
 
-## Further Improvements
+## Performance Improvements and Limitations
 
-More examples from different people, camera distances and lighting could help make recognition more reliable. We have not measured accuracy on a separate test set.
+With more time and resources, we would collect more balanced training examples from different people, camera angles, distances and lighting conditions. We would also retrain the model using the final camera code so that the training inputs match the live inputs.
 
-Some inputs in the latest camera code differ from the saved training data, so these need to be checked together before reuse.
+We would test the model on people and recordings not used during training, measure accuracy for each class, and compare different KNN settings. A model that recognises movement over time could also help distinguish gestures that look similar in a single frame.
+
+However, some limitations would remain. Hands can be hidden, move outside the camera view or become difficult to track in poor lighting. Similar gestures can have different meanings, so the system cannot reliably understand a person's intention. Our current classifier always chooses one of four classes, even when an unfamiliar gesture is shown. The three-second voting window reduces rapid changes but also delays the response.
+
+We have not yet measured accuracy on a separate test set.
