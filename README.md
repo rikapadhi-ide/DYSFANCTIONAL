@@ -4,7 +4,7 @@
 
 Meet Sir Vents-A-Lot : an experimental interactive object designed to explore the increasingly blurred boundaries between humans and the things they create.
 
-![enter image description here](https://cdn.corenexis.com/f/Gtd29APj.png)
+<img width="4592" height="3448" alt="P1120635" src="https://github.com/user-attachments/assets/d885b6b9-927d-40b8-90cb-b356fdffd396" />
 
 ## About the Project
 
