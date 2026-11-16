@@ -90,6 +90,10 @@ Unit tests, Debugging, and Prototypes.
 **Final Images**    //  
 Final prototypes, renders and photography.
 
+## Next Steps
+
+Our team plans on continuing our project and exploring different movements, materials, and increased power source (our project guidelines limited our sources to 5V). We want to make the motor movement smoother, potentially new and interesting movements, and in the future add more elements to make Sir Vents-A-Lot more autonomy (such as running away or a pressure sensitive button)
+
 ## Our Team
 
 Developed by Innovation Design Engineering Students (IDE) at Imperial College London and Royal College of Art for the Cyber Physical Systems Module. 
