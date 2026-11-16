@@ -28,8 +28,7 @@ Rather than attempting to answer these questions definitively, the project uses 
 
 Our project combines physical prototyping, electronics, and interactive programming to create an expressive object.
 
-
-![enter image description here](https://cdn.corenexis.com/f/Gtd29APj.png)
+<img width="4592" height="3448" alt="P1120635" src="https://github.com/user-attachments/assets/f0825d27-aa58-410d-b704-beb82e837eba" />
 
 **Hardware**
 
